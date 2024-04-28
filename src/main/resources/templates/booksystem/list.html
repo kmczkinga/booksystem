@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Könyvtár-rendszer</title>
+
+    <link rel="stylesheet"
+          th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.5/datatables.min.css"/>
+ 
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.5/datatables.min.js"></script>
+
+    <script>
+        let datatable;
+        $(function() {
+            datatable = $('datatable').DataTable();
+        });
+        // Ezek azért szükségesek, mivel az isbn miatt errort dob a th:onClick:
+        // org.thymeleaf.exceptions.TemplateProcessingException:
+        // Only variable expressions returning numbers or booleans are allowed in this context...	
+        function updateBook(button) {
+            var isbn = button.getAttribute('data-book-isbn');
+            window.location.href = '/booksystem/book/' + isbn;
+        }
+        function deleteBook(button) {
+            var isbn = button.getAttribute('data-book-isbn');
+            window.location.href = '/booksystem/book/delete/' + isbn;
+        }
+    </script>
+    
+    <style>
+    	.fixedsize {
+    		width: "20%";
+    	}
+    </style>
+</head>
+<body>
+
+<div class="card mt-3">
+    <div class="card-header">Szerzők listája</div>
+    <div class="card-body">
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th>Teljes név</th>
+                    <th>Születési dátum</th>
+                    <th>Nemzetiség</th>
+                    <th>Könyvek</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:each="author: ${authors}">
+                <td class="align-middle" th:text="${author.lastName + ' ' + author.firstName}"></td>
+                <td class="align-middle" th:text="${author.birthDate}"></td>
+                <td class="align-middle" th:text="${author.nationality}"></td>
+                <td class="align-middle">
+                <table class="table datatable">
+		            <thead>
+		                <tr>
+		                    <th style="width: 16.66%">ISBN</th>
+		                    <th style="width: 25%">Cím</th>
+		                    <th style="width: 14.58%">Oldalak száma </th>
+		                    <th style="width: 14.58%">Ár</th>
+		                    <th style="width: 14.58%"></th>
+		                    <th style="width: 14.58%"></th>
+		                </tr>
+		            </thead>
+		            <tbody>
+	                	<tr th:each="book: ${author.books}">
+			                <td class="align-middle" th:text="${book.isbn}"></td>
+			                <td class="align-middle" th:text="${book.title}"></td>
+			                <td class="align-middle" th:text="${book.numberOfPages}"></td>
+			                <td class="align-middle" th:text="${book.price}"></td>
+			                <td class="align-middle">
+			                    <button class="btn btn-success w-75" th:attr="data-book-isbn=${book.isbn}"
+       								onclick="updateBook(this)">Szerkesztés</button>
+			                </td>
+			                <td class="align-middle" >
+			                    <button class="btn btn-danger w-75" th:attr="data-book-isbn=${book.isbn}"
+       								onclick="deleteBook(this)">Törlés</button>
+			                </td>
+			            </tr>
+		            </tbody>
+		            </table>
+                </td>
+                <td class="align-middle">
+                    <button th:onclick="|window.location.href='/booksystem/author/${author.id}'|"
+                       class="btn btn-success w-75 ">Szerkesztés</button>
+                </td>
+                <td class="align-middle">
+                    <button th:onclick="|window.location.href='/booksystem/author/delete/${author.id}'|"
+                       class="btn btn-danger w-75">Törlés</button>
+                </td>
+            </tr>
+            </tbody>
+        </table> 
+    </div>
+</div>
+<div class="w-50" style="margin:auto">
+	<table class="table">
+		<tbody>
+			<tr>
+				<td>
+					<button th:onclick="|window.location.href='/booksystem/author/create'|"
+			       class="btn btn-primary btn-lg w-100">Új szerző hozzáadása</button>
+			    </td>
+				<td>
+					<button th:onclick="|window.location.href='/booksystem/book/create'|"
+			       class="btn btn-primary btn-lg w-100">Új könyv hozzáadása</button>
+			    </td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</body>
+</html>

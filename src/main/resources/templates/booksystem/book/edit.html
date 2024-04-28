@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Könyv módosító oldal</title>
+
+    <link rel="stylesheet"
+          th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+    <div class="card mt-3">
+    <div class="card-header">Könyv módosító oldal</div>
+    <div class="card-body">
+        <div class="col-md-4">
+            <form method="post"
+                  th:action="@{/booksystem/book/${book.isbn}}">
+                <div class="form-group">
+                    <label for="isbn">ISBN</label>
+                    <input type="text"
+                           id="isbn"
+                           name="isbn"
+                           readonly
+                           class="form-control"
+                           th:value="${book.isbn}"/>
+                </div>
+                <div class="form-group">
+                    <label for="title">Cím</label>
+                    <input type="text"
+                           id="title"
+                           name="title"
+                           class="form-control"
+                           th:value="${book.title}"/>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfPages">Oldalak száma</label>
+                    <input type="text"
+                           id="numberOfPages"
+                           name="numberOfPages"
+                           class="form-control"
+                           th:value="${book.numberOfPages}"/>
+                </div>
+                <div class="form-group">
+                    <label for="price">Ár</label>
+                    <input type="number"
+                           id="price"
+                           name="price"
+                           class="form-control"
+                           th:value="${book.price}"/>
+                           
+                </div>
+                <div class="form-group input">
+                      <label for="authorId">Szerző</label>
+                      <select name="author" id="author" class="form-group" style="padding-left: 10px; width:100%;" required>
+					    <option value="0">Válassz egy szerzőt</option>
+    					<option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.lastName + ' ' + author.firstName}">
+					</select>  
+				</div>
+                <div class="form-group mt-3">
+                    <button th:onclick="|window.location.href='/booksystem'|" class="btn btn-primary"
+                    type="submit">Módosít
+                    </button>
+                    <button th:onclick="|window.location.href='/booksystem'|"
+                    class="btn btn-secondary"
+                    type="button">Mégsem</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
